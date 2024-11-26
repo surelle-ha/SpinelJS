@@ -1,0 +1,29 @@
+{
+    "name": "@surelle-ha/spinel",
+    "version": "1.0.0",
+    "description": "A modern HTTP framework inspired by ExpressJS, built to leverage the power of Bun for high-performance server-side applications. It features built-in support for dependency injection, that enables developers to create scalable, maintainable, and modular applications with ease.",
+    "main": "./dist/index.js",
+    "type": "module",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "rimraf dist && tsc --build",
+        "build:watch": "rimraf dist && tsc --build --watch"
+    },
+    "keywords": [
+        "framework",
+        "http",
+        "nodejs",
+        "bun"
+    ],
+    "author": "Harold Eustaquio",
+    "license": "ISC",
+    "dependencies": {
+        "@surelle-ha/spinel": "file:",
+        "rimraf": "^6.0.1"
+    },
+    "devDependencies": {
+        "@types/node": "^22.8.6",
+        "eslint": "^9.12.0",
+        "eslint-plugin-typescript": "^0.14.0"
+    }
+}
