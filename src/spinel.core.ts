@@ -10,19 +10,26 @@ import type { HTTPMethod } from "./spinel.type.js";
 
 export class Spinel {
     private endpoints: Map<string, EndpointOption>;
-
     private globalVersion: string;
     private globalPrefix: string;
 
     constructor(private readonly spinelOption: SpinelOption) {
         this.endpoints = new Map();
-
         this.globalVersion = this.spinelOption.globalVersion;
         this.globalPrefix = this.spinelOption.globalPrefix;
     }
 
     private routeResolver(route: string): string {
-        return `/${route}`;
+        if (!route) throw new Error("Route must not be empty");
+
+        const prefix = this.globalPrefix || "";
+        const version = this.globalVersion || "";
+
+        return `/${[prefix, version, route].filter(Boolean).join("/")}`;
+    }
+
+    private getEndpointKey(method: HTTPMethod, route: string): string {
+        return `${method}:${route}`;
     }
 
     public createModule(modules: ModuleOption | ModuleOption[]): void {
@@ -31,11 +38,7 @@ export class Spinel {
             for (const endpoint of module.useSet) {
                 const key = this.getEndpointKey(
                     endpoint.method,
-                    `${this.routeResolver(
-                        this.globalPrefix
-                    )}${this.routeResolver(this.globalVersion)}${
-                        endpoint.route
-                    }`
+                    this.routeResolver(endpoint.route) || endpoint.route
                 );
                 this.endpoints.set(key, endpoint);
             }
@@ -83,9 +86,5 @@ export class Spinel {
                 `Server running at http://${option.hostname}:${option.port}`
             );
         });
-    }
-
-    private getEndpointKey(method: HTTPMethod, route: string): string {
-        return `${method}:${route}`;
     }
 }
